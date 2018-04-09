@@ -36,22 +36,38 @@ class LUISClient:
 
     # path template for LUIS endpoint URIs
     PATH     = "/luis/api/v2.0/apps/{app_id}/versions/{app_version}/"
+    
 
     # default HTTP status information for when we haven't yet done a request
     http_status = 200
     reason = ""
     result = ""
 
-    def __init__(self, host, app_id, app_version, key):
-        if len(key) != 32:
-            raise ValueError("LUIS subscription key not specified in " +
-                             os.path.basename(__file__))
-        if len(app_id) != 36:
-            raise ValueError("LUIS application ID not specified in " +
-                             os.path.basename(__file__))
-        self.key = key
-        self.host = host
-        self.path = self.PATH.format(app_id=app_id, app_version=app_version)
+    #This is the constructor in case you want to create a application
+    def __init__(self, subscription_key, name='myApp', culture='en-us'):
+           
+        data = str({'name': name, 'culture': culture})
+        
+        creation_path = '/luis/api/v2.0/apps/'
+        self.key = subscription_key
+        self.host = LUIS_HOST
+        headers = {'Content-Type': 'application/json', 'Ocp-Apim-Subscription-Key': self.key}
+        conn = http.client.HTTPSConnection(self.host)
+        conn.request('POST', creation_path, data.encode('UTF8'), headers)
+        response = conn.getresponse()
+        print(response.read())
+        conn.close()
+
+    # def __init__(self, host, app_id, app_version, key):
+    #     if len(key) != 32:
+    #         raise ValueError("LUIS subscription key not specified in " +
+    #                          os.path.basename(__file__))
+    #     if len(app_id) != 36:
+    #         raise ValueError("LUIS application ID not specified in " +
+    #                          os.path.basename(__file__))
+    #     self.key = key
+    #     self.host = host
+    #     self.path = self.PATH.format(app_id=app_id, app_version=app_version)
 
     def call(self, luis_endpoint, method, data=""):
         path = self.path + luis_endpoint
@@ -99,8 +115,8 @@ if __name__ == "__main__":
     # sys.argv.append("-train")
     # sys.argv.append("-status")
 
-    luis = LUISClient(LUIS_HOST, LUIS_APP_ID, LUIS_APP_VERSION,
-                      LUIS_authoringKey)
+    luis = LUISClient('') #have to add subscription key
+    exit()
 
     try:
         if len(sys.argv) > 1:
