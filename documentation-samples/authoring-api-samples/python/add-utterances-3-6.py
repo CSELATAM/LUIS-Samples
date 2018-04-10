@@ -1,7 +1,7 @@
 ########### Python 3.6 #############
 # -*- coding: utf-8 -*-
 
-import http.client, sys, os.path, json
+import http.client, sys, os.path, json, time
 
 # Update the host if your LUIS subscription is not in the West US region
 LUIS_HOST       = "westus.api.cognitive.microsoft.com"
@@ -19,6 +19,7 @@ class LUISApp:
     EXAMPLES = "examples"
     INTENTS  = "intents?"
     DELETE_APP = "DELETE_APP"
+    
 
     # HTTP verbs
     GET  = "GET"
@@ -36,6 +37,9 @@ class LUISApp:
     http_status = 200
     reason = ""
     result = ""
+
+    #intent dict in order to store the id of each intent
+    intent_dict = {}
 
     #This is the constructor in case you want to create a application
     def __init__(self, subscription_key, name='myApp', culture='en-us'):
@@ -62,9 +66,12 @@ class LUISApp:
     #     self.host = host
     #     self.path = self.PATH.format(app_id=app_id, app_version=app_version)
 
-    def call(self, luis_endpoint, method, data=""):
+    def call(self, luis_endpoint, method, data='',intent_name=''):
         if luis_endpoint == self.DELETE_APP:
             path = self.path[0:self.path.find('versions')]
+        elif luis_endpoint == self.INTENTS and method == self.DELETE:
+            path = self.path + luis_endpoint + '/' + data
+            data = ''
         else:
             path = self.path + luis_endpoint
 
@@ -72,10 +79,18 @@ class LUISApp:
         conn = http.client.HTTPSConnection(self.host)
         conn.request(method, path, data.encode(self.UTF8) or None, headers)
         response = conn.getresponse()
-        self.result = json.dumps(json.loads(response.read().decode(self.UTF8)),
+        decoded = response.read().decode(self.UTF8)
+        
+        if intent_name and method == self.POST:
+            self.intent_dict[intent_name] = decoded.replace('"',"")
+
+        self.result = json.dumps(json.loads(decoded),
                                  indent=2)
         self.http_status = response.status
         self.reason = response.reason
+        
+        print(self.intent_dict)
+
         return self
 
     def add_utterances(self, filename=UTTERANCE_FILE):
@@ -106,19 +121,30 @@ class LUISApp:
         raise http.client.HTTPException("{} {}".format(
             self.http_status, self.reason))
 
-    def create_intent(self, intent_name):
+    def add_intent(self, intent_name):
         data = str({'name': intent_name})
-        return self.call(self.INTENTS, self.POST, data)
+        return self.call(self.INTENTS, self.POST, data, intent_name=intent_name)
 
     def delete_app(self):
         return self.call(self.DELETE_APP, self.DELETE)
 
 
+    ############################ THIS TWO ARE TOGETHER ########################################################################
+    def delete_intent(self, intent_name):
+        return self.call(self.INTENTS, self.DELETE, intent_name)
+
+    def get_intent_id(self, intent_name):
+        pass
+
+
 if __name__ == "__main__":
 
     luis = LUISApp('')
+    luis.add_intent('BookFlight')
     exit()
-    luis.create_intent('BookFlight')
+    time.sleep(30)
+    luis.delete_intent('BookFlight').print()
+    exit()
     luis.add_utterances().print()
     exit()
     luis.train().print()
