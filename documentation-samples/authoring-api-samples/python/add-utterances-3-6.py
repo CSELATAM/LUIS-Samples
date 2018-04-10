@@ -26,6 +26,7 @@ class LUISClient:
     # endpoint method names
     TRAIN    = "train"
     EXAMPLES = "examples"
+    INTENTS  = "intents?"
 
     # HTTP verbs
     GET  = "GET"
@@ -71,7 +72,7 @@ class LUISClient:
 
     def call(self, luis_endpoint, method, data=""):
         path = self.path + luis_endpoint
-        headers = {'Ocp-Apim-Subscription-Key': self.key}
+        headers = {'Content-Type': 'application/json', 'Ocp-Apim-Subscription-Key': self.key}
         conn = http.client.HTTPSConnection(self.host)
         conn.request(method, path, data.encode(self.UTF8) or None, headers)
         response = conn.getresponse()
@@ -109,13 +110,23 @@ class LUISClient:
         raise http.client.HTTPException("{} {}".format(
             self.http_status, self.reason))
 
+    def create_intent(self, intent_name):
+        data = str({'name': intent_name})
+        return self.call(self.INTENTS, self.POST, data)
+
+
 if __name__ == "__main__":
 
     # uncomment a line below to simulate command line options
     # sys.argv.append("-train")
     # sys.argv.append("-status")
 
-    luis = LUISClient('') #have to add subscription key
+    luis = LUISClient('')
+    luis.create_intent('BookFlight')
+    luis.add_utterances().print()
+    exit()
+    luis.train().print()
+    luis.status().print()
     exit()
 
     try:
