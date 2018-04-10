@@ -54,8 +54,9 @@ class LUISClient:
         conn = http.client.HTTPSConnection(self.host)
         conn.request('POST', creation_path, data.encode('UTF8'), headers)
         response = conn.getresponse()
-        print('resposta direta')
-        print(response.read().decode('utf-8'))
+        string_id = response.read().decode('utf-8')
+        self.path = self.PATH.format(app_id=string_id, app_version='0.1').replace('"',"")
+    
 
     # def __init__(self, host, app_id, app_version, key):
     #     if len(key) != 32:
