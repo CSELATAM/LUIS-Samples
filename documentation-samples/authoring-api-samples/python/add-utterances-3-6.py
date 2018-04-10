@@ -31,6 +31,8 @@ class LUISClient:
     # HTTP verbs
     GET  = "GET"
     POST = "POST"
+    DELETE = "DELETE"
+    DELETE_APP = "DELETE_APP"
 
     # Encoding
     UTF8 = "UTF8"
@@ -46,7 +48,6 @@ class LUISClient:
 
     #This is the constructor in case you want to create a application
     def __init__(self, subscription_key, name='myApp', culture='en-us'):
-           
         data = str({'name': name, 'culture': culture})
         creation_path = '/luis/api/v2.0/apps/'
         self.key = subscription_key
@@ -71,7 +72,11 @@ class LUISClient:
     #     self.path = self.PATH.format(app_id=app_id, app_version=app_version)
 
     def call(self, luis_endpoint, method, data=""):
-        path = self.path + luis_endpoint
+        if luis_endpoint == self.DELETE_APP:
+            path = self.path[0:self.path.find('versions')]
+        else:
+            path = self.path + luis_endpoint
+
         headers = {'Content-Type': 'application/json', 'Ocp-Apim-Subscription-Key': self.key}
         conn = http.client.HTTPSConnection(self.host)
         conn.request(method, path, data.encode(self.UTF8) or None, headers)
@@ -114,6 +119,9 @@ class LUISClient:
         data = str({'name': intent_name})
         return self.call(self.INTENTS, self.POST, data)
 
+    def delete_app(self):
+        return self.call(self.DELETE_APP, self.DELETE)
+
 
 if __name__ == "__main__":
 
@@ -122,6 +130,8 @@ if __name__ == "__main__":
     # sys.argv.append("-status")
 
     luis = LUISClient('')
+    luis.delete_app()
+    exit()
     luis.create_intent('BookFlight')
     luis.add_utterances().print()
     exit()
