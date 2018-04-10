@@ -27,12 +27,13 @@ class LUISClient:
     TRAIN    = "train"
     EXAMPLES = "examples"
     INTENTS  = "intents?"
-
+    DELETE_APP = "DELETE_APP"
+    
     # HTTP verbs
     GET  = "GET"
     POST = "POST"
     DELETE = "DELETE"
-    DELETE_APP = "DELETE_APP"
+    
 
     # Encoding
     UTF8 = "UTF8"
