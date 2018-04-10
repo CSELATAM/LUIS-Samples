@@ -35,7 +35,7 @@ class LUISClient:
     UTF8 = "UTF8"
 
     # path template for LUIS endpoint URIs
-    PATH     = "/luis/api/v2.0/apps/{app_id}/versions/{app_version}/"
+    PATH = "/luis/api/v2.0/apps/{app_id}/versions/{app_version}/"
     
 
     # default HTTP status information for when we haven't yet done a request
@@ -47,7 +47,6 @@ class LUISClient:
     def __init__(self, subscription_key, name='myApp', culture='en-us'):
            
         data = str({'name': name, 'culture': culture})
-        
         creation_path = '/luis/api/v2.0/apps/'
         self.key = subscription_key
         self.host = LUIS_HOST
@@ -55,8 +54,8 @@ class LUISClient:
         conn = http.client.HTTPSConnection(self.host)
         conn.request('POST', creation_path, data.encode('UTF8'), headers)
         response = conn.getresponse()
-        print(response.read())
-        conn.close()
+        print('resposta direta')
+        print(response.read().decode('utf-8'))
 
     # def __init__(self, host, app_id, app_version, key):
     #     if len(key) != 32:
