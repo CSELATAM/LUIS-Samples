@@ -3,15 +3,6 @@
 
 import http.client, sys, os.path, json
 
-# Authoring key, available in luis.ai under Account Settings
-LUIS_authoringKey  = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-
-# ID of your LUIS app to which you want to add an utterance
-LUIS_APP_ID      = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-
-# The version number of your LUIS app
-LUIS_APP_VERSION = "0.1"
-
 # Update the host if your LUIS subscription is not in the West US region
 LUIS_HOST       = "westus.api.cognitive.microsoft.com"
 
@@ -21,14 +12,14 @@ UTTERANCE_FILE   = "./utterances.json"
 RESULTS_FILE     = "./utterances.results.json"
 
 # LUIS client class for adding and training utterances
-class LUISClient:
+class LUISApp:
     
     # endpoint method names
     TRAIN    = "train"
     EXAMPLES = "examples"
     INTENTS  = "intents?"
     DELETE_APP = "DELETE_APP"
-    
+
     # HTTP verbs
     GET  = "GET"
     POST = "POST"
@@ -126,12 +117,7 @@ class LUISClient:
 
 if __name__ == "__main__":
 
-    # uncomment a line below to simulate command line options
-    # sys.argv.append("-train")
-    # sys.argv.append("-status")
-
-    luis = LUISClient('')
-    luis.delete_app()
+    luis = LUISApp('')
     exit()
     luis.create_intent('BookFlight')
     luis.add_utterances().print()
