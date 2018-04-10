@@ -25,7 +25,6 @@ class LUISApp:
     POST = "POST"
     DELETE = "DELETE"
     
-
     # Encoding
     UTF8 = "UTF8"
 
