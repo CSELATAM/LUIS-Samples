@@ -2,17 +2,29 @@
     {
         "text": "go to Seattle",
         "intentName": "BookFlight",
-        "entityLabels": [
-            {
-                "entityName": "Location::LocationTo",
-                "startCharIndex": 6,
-                "endCharIndex": 12
-            }
-        ]
+        "entityLabels": []
     }
 ,
     {
         "text": "book a flight",
+        "intentName": "BookFlight",
+        "entityLabels": []
+    }
+,
+    {
+        "text": "go to India",
+        "intentName": "BookFlight",
+        "entityLabels": []
+    }
+,
+    {
+        "text": "book a flight to Brazil",
+        "intentName": "BookFlight",
+        "entityLabels": []
+    }
+,
+    {
+        "text": "I want to go to brazil",
         "intentName": "BookFlight",
         "entityLabels": []
     }

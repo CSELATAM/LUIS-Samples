@@ -20,6 +20,7 @@ class LUISApp:
     INTENTS  = "intents?"
     DELETE_INTENT = "intents"
     DELETE_APP = "DELETE_APP"
+    PUBLISH = "pulbish?"
 
     # HTTP verbs
     GET  = "GET"
@@ -131,17 +132,18 @@ class LUISApp:
     def delete_intent(self, intent_name):
         return self.call(self.DELETE_INTENT, self.DELETE, intent_name)
 
-    def get_intent_id(self, intent_name):
-        pass
+    def publish_app(self):
+        return self.call(self.PUBLISH, self.POST)
 
 
 if __name__ == "__main__":
 
     luis = LUISApp('')
     luis.add_intent('BookFlight')
-    luis.delete_intent('BookFlight').print()
-    exit()
     luis.add_utterances().print()
+    time.sleep(60)
+    luis.train().print()
+    time.sleep(60)
     exit()
     luis.train().print()
     luis.status().print()
