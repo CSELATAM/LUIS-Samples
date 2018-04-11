@@ -18,8 +18,8 @@ class LUISApp:
     TRAIN    = "train"
     EXAMPLES = "examples"
     INTENTS  = "intents?"
+    DELETE_INTENT = "intents"
     DELETE_APP = "DELETE_APP"
-    
 
     # HTTP verbs
     GET  = "GET"
@@ -69,8 +69,8 @@ class LUISApp:
     def call(self, luis_endpoint, method, data='',intent_name=''):
         if luis_endpoint == self.DELETE_APP:
             path = self.path[0:self.path.find('versions')]
-        elif luis_endpoint == self.INTENTS and method == self.DELETE:
-            path = self.path + luis_endpoint + '/' + data
+        elif luis_endpoint == self.DELETE_INTENT and method == self.DELETE:
+            path = self.path + luis_endpoint + '/' + self.intent_dict[data]
             data = ''
         else:
             path = self.path + luis_endpoint
@@ -88,8 +88,6 @@ class LUISApp:
                                  indent=2)
         self.http_status = response.status
         self.reason = response.reason
-        
-        print(self.intent_dict)
 
         return self
 
@@ -131,7 +129,7 @@ class LUISApp:
 
     ############################ THIS TWO ARE TOGETHER ########################################################################
     def delete_intent(self, intent_name):
-        return self.call(self.INTENTS, self.DELETE, intent_name)
+        return self.call(self.DELETE_INTENT, self.DELETE, intent_name)
 
     def get_intent_id(self, intent_name):
         pass
@@ -141,8 +139,6 @@ if __name__ == "__main__":
 
     luis = LUISApp('')
     luis.add_intent('BookFlight')
-    exit()
-    time.sleep(30)
     luis.delete_intent('BookFlight').print()
     exit()
     luis.add_utterances().print()
