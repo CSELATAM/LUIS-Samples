@@ -20,7 +20,7 @@ class LUISApp:
     INTENTS  = "intents?"
     DELETE_INTENT = "intents"
     DELETE_APP = "DELETE_APP"
-    PUBLISH = "pulbish?"
+    PUBLISH = "publish?"
 
     # HTTP verbs
     GET  = "GET"
@@ -75,6 +75,8 @@ class LUISApp:
             data = ''
         else:
             path = self.path + luis_endpoint
+        
+        print(path)
 
         headers = {'Content-Type': 'application/json', 'Ocp-Apim-Subscription-Key': self.key}
         conn = http.client.HTTPSConnection(self.host)
@@ -127,8 +129,6 @@ class LUISApp:
     def delete_app(self):
         return self.call(self.DELETE_APP, self.DELETE)
 
-
-    ############################ THIS TWO ARE TOGETHER ########################################################################
     def delete_intent(self, intent_name):
         return self.call(self.DELETE_INTENT, self.DELETE, intent_name)
 
@@ -140,10 +140,15 @@ if __name__ == "__main__":
 
     luis = LUISApp('')
     luis.add_intent('BookFlight')
-    luis.add_utterances().print()
-    time.sleep(60)
-    luis.train().print()
-    time.sleep(60)
+    luis.add_utterances()
+    luis.train()
+    exit()
+    luis.status()
+    while json.loads(luis.result)[0]['details']['status'] == 'InProgress':
+        luis.status()
+        print('#################################')
+        time.sleep(2)
+    
     exit()
     luis.train().print()
     luis.status().print()
