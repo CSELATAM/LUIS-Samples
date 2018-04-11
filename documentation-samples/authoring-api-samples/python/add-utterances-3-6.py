@@ -75,8 +75,6 @@ class LUISApp:
             data = ''
         else:
             path = self.path + luis_endpoint
-        
-        print(path)
 
         headers = {'Content-Type': 'application/json', 'Ocp-Apim-Subscription-Key': self.key}
         conn = http.client.HTTPSConnection(self.host)
@@ -87,10 +85,17 @@ class LUISApp:
         if intent_name and method == self.POST:
             self.intent_dict[intent_name] = decoded.replace('"',"")
 
+
         self.result = json.dumps(json.loads(decoded),
                                  indent=2)
         self.http_status = response.status
         self.reason = response.reason
+
+        if luis_endpoint == luis.TRAIN and method == self.POST:
+            luis.status()
+            while json.loads(luis.result)[0]['details']['status'] == 'InProgress':
+                luis.status()
+                time.sleep(2)
 
         return self
 
@@ -142,16 +147,6 @@ if __name__ == "__main__":
     luis.add_intent('BookFlight')
     luis.add_utterances()
     luis.train()
-    exit()
-    luis.status()
-    while json.loads(luis.result)[0]['details']['status'] == 'InProgress':
-        luis.status()
-        print('#################################')
-        time.sleep(2)
-    
-    exit()
-    luis.train().print()
-    luis.status().print()
     exit()
 
     try:
