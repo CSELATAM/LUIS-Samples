@@ -135,6 +135,7 @@ class LUISApp:
         them as list or with a file. You must pass filename or utterance parameters
 
         Parameters:
+        -----------
         filename : string
             Optional parameter that tells which is the path of the file you want to get the utterances from
         utterance : list
@@ -143,7 +144,8 @@ class LUISApp:
             Optional parameter with the intent name you want to add the phrases
 
         Returns:
-        self.call : method
+        --------
+        self.call : object
             Use the call method in order to really do the request to API
         """
         if utterance and intent_name:
@@ -158,9 +160,33 @@ class LUISApp:
         return self.call(self.EXAMPLES, self.POST, data)
         
     def train(self):
+        """
+        Method used to train the model. You must add at least 5 utterances to each intent.
+
+        Parameters:
+        -----------
+        None
+
+        Returns:
+        --------
+        self.call : object
+            Use the call method in order to really do the request to API
+        """
         return self.call(self.TRAIN, self.POST)
 
     def status(self):
+        """
+        Method used to discover which is the status of the model training process
+
+        Parameters:
+        -----------
+        None
+
+        Returns:
+        --------
+        self.call : object
+            Use the call method in order to really do the request to API
+        """
         return self.call(self.TRAIN, self.GET)
 
     def write(self, filename=RESULTS_FILE):
