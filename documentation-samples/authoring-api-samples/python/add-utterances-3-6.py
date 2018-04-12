@@ -73,8 +73,12 @@ class LUISApp:
         elif luis_endpoint == self.DELETE_INTENT and method == self.DELETE:
             path = self.path + luis_endpoint + '/' + self.intent_dict[data]
             data = ''
+        elif luis_endpoint == self.PUBLISH:
+            path = self.path[0:self.path.find('versions')] + '/' + luis_endpoint
         else:
             path = self.path + luis_endpoint
+        
+        print(path)
 
         headers = {'Content-Type': 'application/json', 'Ocp-Apim-Subscription-Key': self.key}
         conn = http.client.HTTPSConnection(self.host)
@@ -137,8 +141,9 @@ class LUISApp:
     def delete_intent(self, intent_name):
         return self.call(self.DELETE_INTENT, self.DELETE, intent_name)
 
-    def publish_app(self):
-        return self.call(self.PUBLISH, self.POST)
+    def publish(self, versionId='0.1',region='westus'):
+        data = str({'versionId':versionId, 'region': region})
+        return self.call(self.PUBLISH, self.POST, data=data)
 
 
 if __name__ == "__main__":
@@ -147,6 +152,7 @@ if __name__ == "__main__":
     luis.add_intent('BookFlight')
     luis.add_utterances()
     luis.train()
+    luis.publish().print()
     exit()
 
     try:
