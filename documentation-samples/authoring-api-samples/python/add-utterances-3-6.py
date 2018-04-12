@@ -190,6 +190,19 @@ class LUISApp:
         return self.call(self.TRAIN, self.GET)
 
     def write(self, filename=RESULTS_FILE):
+        """
+        Method used to write on a file the renponse from the last API call
+
+        Parameters:
+        -----------
+        filename : string
+            Used to identify the path of the file which will be written
+
+        Returns:
+        --------
+        self.call : object
+            Use the call method in order to really do the request to API
+        """
         if self.result:
             with open(filename, "w", encoding=self.UTF8) as outfile:
                 outfile.write(self.result)
