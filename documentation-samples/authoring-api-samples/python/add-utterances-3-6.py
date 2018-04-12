@@ -56,17 +56,6 @@ class LUISApp:
         self.path = self.PATH.format(app_id=string_id, app_version='0.1').replace('"',"")
     
 
-    # def __init__(self, host, app_id, app_version, key):
-    #     if len(key) != 32:
-    #         raise ValueError("LUIS subscription key not specified in " +
-    #                          os.path.basename(__file__))
-    #     if len(app_id) != 36:
-    #         raise ValueError("LUIS application ID not specified in " +
-    #                          os.path.basename(__file__))
-    #     self.key = key
-    #     self.host = host
-    #     self.path = self.PATH.format(app_id=app_id, app_version=app_version)
-
     def call(self, luis_endpoint, method, data='',intent_name=''):
         if luis_endpoint == self.DELETE_APP:
             path = self.path[0:self.path.find('versions')]
