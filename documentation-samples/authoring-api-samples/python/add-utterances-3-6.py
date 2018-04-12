@@ -105,7 +105,8 @@ class LUISApp:
         if utterance and intent_name:
             data = []
             for phrase in utterance:
-                data.append(str({'text': phrase, 'intentName': intent_name, 'entityLabels': []}))
+                data.append({'text': phrase, 'intentName': intent_name, 'entityLabels': []})
+            data = str(data)
         else:
             with open(filename, encoding=self.UTF8) as utterance:
                 data = utterance.read()
@@ -154,7 +155,7 @@ if __name__ == "__main__":
 
     luis = LUISApp('')
     luis.add_intent('BookFlight')
-    luis.add_utterances().print()
+    luis.add_utterances(utterance=['DASDASDSADSDSA','DASDASDSADASD','DASDASDASDASD','DASDASDASDSAD','SADASDSADASDSD'], intent_name='BookFlight').print()
     luis.train().print()
     luis.publish().print()
     exit()
