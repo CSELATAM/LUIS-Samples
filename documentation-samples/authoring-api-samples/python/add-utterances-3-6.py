@@ -43,8 +43,23 @@ class LUISApp:
     intent_dict = {}
     utterance_dict = {}
 
-    #This is the constructor in case you want to create a application
     def __init__(self, subscription_key, name='myApp', culture='en-us'):
+        """
+        Constructor method. Creates a luis app on your subscription page.
+
+        Parameters:
+        -----------
+        subscription_key : string
+            Mandatory parameter with the subscription key you will create the app
+        name : string
+            Optional parameter that tells the name of the app you want to create
+        culture : string
+            Optional parameter that defines which culture is your app targeting.
+
+        Returns:
+        --------
+        None
+        """
         data = str({'name': name, 'culture': culture})
         creation_path = '/luis/api/v2.0/apps/'
         self.key = subscription_key
