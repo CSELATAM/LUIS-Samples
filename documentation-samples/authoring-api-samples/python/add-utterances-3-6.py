@@ -41,6 +41,7 @@ class LUISApp:
 
     #intent dict in order to store the id of each intent
     intent_dict = {}
+    utterance_dict = {}
 
     #This is the constructor in case you want to create a application
     def __init__(self, subscription_key, name='myApp', culture='en-us'):
@@ -76,11 +77,14 @@ class LUISApp:
         if intent_name and method == self.POST:
             self.intent_dict[intent_name] = decoded.replace('"',"")
 
-
         self.result = json.dumps(json.loads(decoded),
                                  indent=2)
         self.http_status = response.status
         self.reason = response.reason
+
+        if luis_endpoint == self.EXAMPLES and method == self.POST:
+            for json_phrase in json.loads(luis.result):
+                self.utterance_dict[json_phrase['value']['UtteranceText']] = json_phrase['value']['ExampleId']
 
         if luis_endpoint == luis.TRAIN and method == self.POST:
             luis.status()
@@ -138,15 +142,24 @@ class LUISApp:
     def publish(self, versionId='0.1',region='westus'):
         data = str({'versionId':versionId, 'region': region})
         return self.call(self.PUBLISH, self.POST, data=data)
+    
+    def delete_utterance(self, uterrance):
+        if (uterrance not in self.utterance_dict):
+            print('The phrase ' + uterrance + ' is not registered yet')
+        else:
+            return self.call(self.EXAMPLES + '/' + str(self.utterance_dict[uterrance]), self.DELETE)
 
 
 if __name__ == "__main__":
 
     luis = LUISApp('')
     luis.add_intent('BookFlight')
-    luis.add_utterances(utterance=['DASDASDSADSDSA','DASDASDSADASD','DASDASDASDASD','DASDASDASDSAD','SADASDSADASDSD'], intent_name='BookFlight').print()
-    luis.train().print()
-    luis.publish().print()
+    luis.add_utterances(utterance=['sdasdasdasdasd','dasdasdasdasd','dasdasdasdasdsa','dsadasdasdasd','dasdasdsadsads'], intent_name='BookFlight')
+    print(luis.utterance_dict)
+    luis.delete_utterance('sassaasasasassas53425')
+    exit()
+    luis.train()
+    luis.publish()
     exit()
 
     try:
