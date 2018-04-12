@@ -209,6 +209,18 @@ class LUISApp:
         return self
 
     def print(self):
+        """
+        Method used to print the status of the last call
+
+        Parameters:
+        -----------
+        None
+
+        Returns:
+        --------
+        self.call : object
+            Use the call method in order to really do the request to API
+        """
         if self.result:
             print(self.result)
         return self
@@ -220,23 +232,89 @@ class LUISApp:
             self.http_status, self.reason))
 
     def add_intent(self, intent_name):
+        """
+        Method used to add some intent to LUIS model
+
+        Parameters:
+        -----------
+        intent_name : string
+            Mandatory Method telling the name of the intent you want to add to the model
+        
+        Returns:
+        -------
+         self.call : object
+            Use the call method in order to really do the request to API
+        """
         data = str({'name': intent_name})
         return self.call(self.INTENTS, self.POST, data, intent_name=intent_name)
 
     def delete_app(self):
+        """
+        Delete the LUIS app you have created
+
+        Parameters:
+        -----------
+        None
+
+        Returns:
+        --------
+        self.call : object
+            Use the call method in order to really do the request to API
+        """
         return self.call(self.DELETE_APP, self.DELETE)
 
     def delete_intent(self, intent_name):
+        """
+        Method used to delet a intent a intent you created
+
+        Parameters:
+        -----------
+        intent_name : string
+            Mandatory method with the name of the intent will be deleted
+
+        Returns:
+        --------
+        self.call : object
+            Use the call method in order to really do the request to API
+        """
         if (intent_name not in self.intent_dict):
             print('The intent ' + intent_name + ' is not registered yet')
         else:
             return self.call(self.DELETE_INTENT, self.DELETE, intent_name)
 
     def publish(self, versionId='0.1',region='westus'):
+        """
+        Method used to publish your app. Got to train the app before doing this.
+        
+        Parameters:
+        -----------
+        versionID : string
+            Optional parameter that tells the version number of the LUIS app you want to publish
+        region : string
+            Optional parameter containing the region you will publish your app. 
+
+        Returns:
+        --------
+         self.call : object
+            Use the call method in order to really do the request to API
+        """
         data = str({'versionId':versionId, 'region': region})
         return self.call(self.PUBLISH, self.POST, data=data)
     
     def delete_utterance(self, uterrance):
+        """
+        Method used to download a utterance you uploaded
+
+        Parameters:
+        -----------
+        uterrance: string
+            Mandatory parameter containing the utterance you want to delete
+
+        Returns:
+        --------
+        self.call : object
+            Use the call method in order to really do the request to API
+        """
         if (uterrance not in self.utterance_dict):
             print('The phrase ' + uterrance + ' is not registered yet')
         else:
