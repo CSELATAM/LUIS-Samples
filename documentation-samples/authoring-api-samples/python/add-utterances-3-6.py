@@ -226,6 +226,16 @@ class LUISApp:
         return self
 
     def raise_for_status(self):
+        """
+        Method used for getting the status of the last API call
+
+        Parameters:
+        -----------
+        None
+
+        Returns:
+        None
+        """
         if 200 <= self.http_status < 300:
             return self
         raise http.client.HTTPException("{} {}".format(
