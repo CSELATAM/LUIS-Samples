@@ -77,8 +77,6 @@ class LUISApp:
             path = self.path[0:self.path.find('versions')] + '/' + luis_endpoint
         else:
             path = self.path + luis_endpoint
-        
-        print(path)
 
         headers = {'Content-Type': 'application/json', 'Ocp-Apim-Subscription-Key': self.key}
         conn = http.client.HTTPSConnection(self.host)
@@ -103,9 +101,15 @@ class LUISApp:
 
         return self
 
-    def add_utterances(self, filename=UTTERANCE_FILE):
-        with open(filename, encoding=self.UTF8) as utterance:
-            data = utterance.read()
+    def add_utterances(self, filename=UTTERANCE_FILE, utterance='', intent_name=''):
+        if utterance and intent_name:
+            data = []
+            for phrase in utterance:
+                data.append(str({'text': phrase, 'intentName': intent_name, 'entityLabels': []}))
+        else:
+            with open(filename, encoding=self.UTF8) as utterance:
+                data = utterance.read()
+        
         return self.call(self.EXAMPLES, self.POST, data)
         
     def train(self):
@@ -150,8 +154,8 @@ if __name__ == "__main__":
 
     luis = LUISApp('')
     luis.add_intent('BookFlight')
-    luis.add_utterances()
-    luis.train()
+    luis.add_utterances().print()
+    luis.train().print()
     luis.publish().print()
     exit()
 
