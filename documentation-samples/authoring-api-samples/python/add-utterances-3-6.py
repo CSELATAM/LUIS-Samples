@@ -73,6 +73,26 @@ class LUISApp:
     
 
     def call(self, luis_endpoint, method, data='',intent_name=''):
+        """
+        Method responsible for calling all the API Requests on this code. The other methods calls this one.
+        After this method is called, the result, http_status and reason fields of the object are changed in
+        order to show how was the last call.
+
+        Parameters:
+        -----------
+        luis_endpoint : string
+            Mandatory parameter that will help in the decision on how to create the path to the request
+        method : string
+            Mandatory parameter that tells which HTTP method will be used with the call
+        data : dict
+            Optional parameter used to add the data, in cases of POST requests
+        intent_name : string
+            Optional parameter used to find which intent you're trying to make the changes
+        
+        Returns:
+        --------
+        self : object
+        """
         if luis_endpoint == self.DELETE_APP:
             path = self.path[0:self.path.find('versions')]
         elif luis_endpoint == self.DELETE_INTENT and method == self.DELETE:
