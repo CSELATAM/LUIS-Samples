@@ -137,7 +137,10 @@ class LUISApp:
         return self.call(self.DELETE_APP, self.DELETE)
 
     def delete_intent(self, intent_name):
-        return self.call(self.DELETE_INTENT, self.DELETE, intent_name)
+        if (intent_name not in self.intent_dict):
+            print('The intent ' + intent_name + ' is not registered yet')
+        else:
+            return self.call(self.DELETE_INTENT, self.DELETE, intent_name)
 
     def publish(self, versionId='0.1',region='westus'):
         data = str({'versionId':versionId, 'region': region})
@@ -154,6 +157,8 @@ if __name__ == "__main__":
 
     luis = LUISApp('')
     luis.add_intent('BookFlight')
+    luis.delete_intent('sdasdasdasdsad')
+    exit()
     luis.add_utterances(utterance=['sdasdasdasdasd','dasdasdasdasd','dasdasdasdasdsa','dsadasdasdasd','dasdasdsadsads'], intent_name='BookFlight')
     print(luis.utterance_dict)
     luis.delete_utterance('sassaasasasassas53425')
