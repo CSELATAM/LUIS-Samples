@@ -337,16 +337,19 @@ class LUISApp:
 
 
 if __name__ == "__main__":
-
+    
+    # example code to manage your luis apps
+    luis_manager = {}
     luis = LUISApp('')
     luis.add_intent('BookFlight')
     luis.add_utterances(utterance=['sasasasasasasas','sasasasasasas','sasasasasas','sasasasasassafdasfadsf','sasasdasdasdasd'],intent_name='BookFlight')
-    print(luis.utterance_dict)
-    luis.delete_utterance('sassaasasasassas53425')
+    luis_manager['myApp'] = luis
+    print (luis_manager)
     exit()
     luis.train()
     luis.publish()
     exit()
+
 
     try:
         if len(sys.argv) > 1:
