@@ -338,7 +338,7 @@ class LUISApp:
 
 if __name__ == "__main__":
 
-    luis = LUISApp('4533a64e8a3d4af2afc17a9aece3aa79')
+    luis = LUISApp('')
     luis.add_intent('BookFlight')
     luis.add_utterances(utterance=['sasasasasasasas','sasasasasasas','sasasasasas','sasasasasassafdasfadsf','sasasdasdasdasd'],intent_name='BookFlight')
     print(luis.utterance_dict)
