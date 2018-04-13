@@ -11,7 +11,7 @@ LUIS_HOST       = "westus.api.cognitive.microsoft.com"
 UTTERANCE_FILE   = "./utterances.json"
 RESULTS_FILE     = "./utterances.results.json"
 
-# LUIS client class for adding and training utterances
+# LUIS app class for managing all the operations inside a LUIS App
 class LUISApp:
     
     # endpoint method names
@@ -33,13 +33,13 @@ class LUISApp:
     # path template for LUIS endpoint URIs
     PATH = "/luis/api/v2.0/apps/{app_id}/versions/{app_version}/"
     
-
     # default HTTP status information for when we haven't yet done a request
     http_status = 200
     reason = ""
     result = ""
 
-    #intent dict in order to store the id of each intent
+    #dicts used in order to get the ID of utterances and intents, in order to
+    #make operations on them
     intent_dict = {}
     utterance_dict = {}
 
@@ -54,7 +54,7 @@ class LUISApp:
         name : string
             Optional parameter that tells the name of the app you want to create
         culture : string
-            Optional parameter that defines which culture is your app targeting.
+            Optional parameter that defines which culture will your app be created
 
         Returns:
         --------
@@ -74,7 +74,7 @@ class LUISApp:
 
     def call(self, luis_endpoint, method, data='',intent_name=''):
         """
-        Method responsible for calling all the API Requests on this code. The other methods calls this one.
+        Method responsible for making all the API Requests on this code. The other methods calls this one.
         After this method is called, the result, http_status and reason fields of the object are changed in
         order to show how was the last call.
 
@@ -132,7 +132,8 @@ class LUISApp:
     def add_utterances(self, filename=UTTERANCE_FILE, utterance='', intent_name=''):
         """
         Method used to add utterances to a intent at the model. You can add the utterances by passing
-        them as list or with a file. You must pass filename or utterance parameters
+        them as list or with a file. If you dont pass neither filename nor utterance list, the method
+        will use the default filename of the class.
 
         Parameters:
         -----------
@@ -162,6 +163,9 @@ class LUISApp:
     def train(self):
         """
         Method used to train the model. You must add at least 5 utterances to each intent.
+        Note: I think I found a bug with the API. In order to have your model really trained
+        you must call the status method and wait for it to complete. I'm doing this operation
+        inside the call method. 
 
         Parameters:
         -----------
@@ -210,7 +214,8 @@ class LUISApp:
 
     def print(self):
         """
-        Method used to print the status of the last call
+        Method used to print the status of the last call. Prints
+        the json returned from the request.
 
         Parameters:
         -----------
@@ -227,7 +232,7 @@ class LUISApp:
 
     def raise_for_status(self):
         """
-        Method used for getting the status of the last API call
+        Method used for raising an exception in case of bad request.
 
         Parameters:
         -----------
@@ -294,7 +299,7 @@ class LUISApp:
 
     def publish(self, versionId='0.1',region='westus'):
         """
-        Method used to publish your app. Got to train the app before doing this.
+        Method used to publish your app. You must to train the app before doing this.
         
         Parameters:
         -----------
@@ -335,9 +340,7 @@ if __name__ == "__main__":
 
     luis = LUISApp('')
     luis.add_intent('BookFlight')
-    luis.delete_intent('sdasdasdasdsad')
-    exit()
-    luis.add_utterances(utterance=['sdasdasdasdasd','dasdasdasdasd','dasdasdasdasdsa','dsadasdasdasd','dasdasdsadsads'], intent_name='BookFlight')
+    luis.add_utterances(utterance=['sasasasasasasas','sasasasasasas','sasasasasas','sasasasasassafdasfadsf','sasasdasdasdasd'],intent_name='BookFlight')
     print(luis.utterance_dict)
     luis.delete_utterance('sassaasasasassas53425')
     exit()
