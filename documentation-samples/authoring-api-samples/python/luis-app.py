@@ -280,6 +280,7 @@ class LUISApp:
         self.call : object
             Use the call method in order to really do the request to API
         """
+        ############################################# some raising here
         return self.call(self.DELETE_APP, self.DELETE)
 
     def delete_intent(self, intent_name):
@@ -298,6 +299,7 @@ class LUISApp:
         """
         if (intent_name not in self.intent_dict):
             print('The intent ' + intent_name + ' is not registered yet')
+            raise Exception('IntentNotCreated')
         else:
             return self.call(self.DELETE_INTENT, self.DELETE, intent_name)
 
