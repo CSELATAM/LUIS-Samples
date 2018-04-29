@@ -149,7 +149,7 @@ class LUISApp:
         self.call : object
             Use the call method in order to really do the request to API
         """
-        if (filename != UTTERANCE_FILE) and utterance:
+        if (filename not in [UTTERANCE_FILE, '']) and utterance:
             print('You passed both the utterance file and uterrances list')
             raise Exception('ArgumentError')
 
@@ -280,7 +280,6 @@ class LUISApp:
         self.call : object
             Use the call method in order to really do the request to API
         """
-        ############################################# some raising here
         return self.call(self.DELETE_APP, self.DELETE)
 
     def delete_intent(self, intent_name):
@@ -338,6 +337,7 @@ class LUISApp:
         """
         if (uterrance not in self.utterance_dict):
             print('The phrase ' + uterrance + ' is not registered yet')
+            raise Exception('UtteranceNotExists')
         else:
             return self.call(self.EXAMPLES + '/' + str(self.utterance_dict[uterrance]), self.DELETE)
 
