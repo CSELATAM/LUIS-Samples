@@ -129,7 +129,7 @@ class LUISApp:
 
         return self
 
-    def add_utterances(self, filename=UTTERANCE_FILE, utterance='', intent_name=''):
+    def add_utterances(self, filename='', utterance='', intent_name=''):
         """
         Method used to add utterances to a intent at the model. You can add the utterances by passing
         them as list or with a file. If you dont pass neither filename nor utterance list, the method
@@ -149,6 +149,10 @@ class LUISApp:
         self.call : object
             Use the call method in order to really do the request to API
         """
+        if (filename != UTTERANCE_FILE) and utterance:
+            print('You passed both the utterance file and uterrances list')
+            raise Exception('ArgumentError')
+
         if utterance and intent_name:
             data = []
             for phrase in utterance:
