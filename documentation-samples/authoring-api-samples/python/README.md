@@ -4,7 +4,7 @@ This is a simple project used to create, delete, modify, train, publish [LUIS](h
 ## 1. Creating a App, adding utterances, training and publishing it
 Creating your app with this code is as simple as it looks like. Follow the code:
 ```
-luis = LUISApp('<LUIS Subscription key>')
+luis = LUISApp('<LUIS Subscription key>', <app_name>)
 luis.add_intent('BookFlight')
 luis.add_utterances(utterance=['book a flight','i want to go to seattle','i want to go to brazil','book a flight to brazil','flight to brazil'],intent_name='BookFlight')
 luis.train()

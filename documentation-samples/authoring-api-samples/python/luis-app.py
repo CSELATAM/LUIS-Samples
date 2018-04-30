@@ -38,12 +38,18 @@ class LUISApp:
     reason = ""
     result = ""
 
-    #dicts used in order to get the ID of utterances and intents, in order to
-    #make operations on them
-    intent_dict = {}
-    utterance_dict = {}
+    # dict used to keep track of which apps have been created
+    created_apps_dict = {}
 
-    def __init__(self, subscription_key, name='myApp', culture='en-us'):
+    # new method, runs before the init and checks if a object with same properties already exists
+    def __new__(cls, *args, **kwargs):
+        app_name = args[1]
+        if app_name in cls.created_apps_dict:
+            return cls.created_apps_dict[app_name]    
+        obj = super(LUISApp, cls).__new__(cls)
+        return obj
+
+    def __init__(self, subscription_key, name, culture='en-us'):
         """
         Constructor method. Creates a luis app on your subscription page.
 
@@ -52,7 +58,7 @@ class LUISApp:
         subscription_key : string
             Mandatory parameter with the subscription key you will create the app
         name : string
-            Optional parameter that tells the name of the app you want to create
+            Mandatory parameter that tells the name of the app you want to create
         culture : string
             Optional parameter that defines which culture will your app be created
 
@@ -60,6 +66,10 @@ class LUISApp:
         --------
         None
         """
+        # if the app with this name have already been created, return the instance
+        if name in self.created_apps_dict:
+            return
+
         data = str({'name': name, 'culture': culture})
         creation_path = '/luis/api/v2.0/apps/'
         self.key = subscription_key
@@ -70,7 +80,13 @@ class LUISApp:
         response = conn.getresponse()
         string_id = response.read().decode('utf-8')
         self.path = self.PATH.format(app_id=string_id, app_version='0.1').replace('"',"")
-    
+        
+        #adding private dicts to keep track where are we creating things
+        self.intent_dict = {}
+        self.utterance_dict = {}
+
+        #adding this app to apps dict
+        self.created_apps_dict[name] = self
 
     def call(self, luis_endpoint, method, data='',intent_name=''):
         """
@@ -346,11 +362,14 @@ if __name__ == "__main__":
     
     # example code to manage your luis apps
     luis_manager = {}
-    luis = LUISApp('')
+    luis = LUISApp('', 'teste')
+    print('criou um')
     luis.add_intent('BookFlight')
-    luis.add_intent('BookFlight')
-    exit()
+    print(luis.intent_dict)
     luis.add_utterances(utterance=['sasasasasasasas','sasasasasasas','sasasasasas','sasasasasassafdasfadsf','sasasdasdasdasd'],intent_name='BookFlight')
+    luis2 = LUISApp('', 'teste2')
+    print(luis2.intent_dict)
+    exit()
     luis_manager['myApp'] = luis
     print (luis_manager)
     exit()
