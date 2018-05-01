@@ -11,6 +11,13 @@ LUIS_HOST       = "westus.api.cognitive.microsoft.com"
 UTTERANCE_FILE   = "./utterances.json"
 RESULTS_FILE     = "./utterances.results.json"
 
+# Class created to handle answer of the requests
+class CallReturn:
+    def __init__(self, result, status, reason):
+        self.result = result
+        self.status = status
+        self.reason = reason
+
 # LUIS app class for managing all the operations inside a LUIS App
 class LUISApp:
     
@@ -143,7 +150,7 @@ class LUISApp:
                 luis.status()
                 time.sleep(2)
 
-        return self
+        return CallReturn(self.result,self.http_status,self.reason)
 
     def add_utterances(self, filename='', utterance='', intent_name=''):
         """
@@ -364,7 +371,7 @@ if __name__ == "__main__":
     luis_manager = {}
     luis = LUISApp('', 'teste')
     print('criou um')
-    luis.add_intent('BookFlight')
+    print(luis.add_intent('BookFlight').reason)
     print(luis.intent_dict)
     luis.add_utterances(utterance=['sasasasasasasas','sasasasasasas','sasasasasas','sasasasasassafdasfadsf','sasasdasdasdasd'],intent_name='BookFlight')
     luis2 = LUISApp('', 'teste2')
@@ -376,27 +383,3 @@ if __name__ == "__main__":
     luis.train()
     luis.publish()
     exit()
-
-
-    try:
-        if len(sys.argv) > 1:
-            option = sys.argv[1].lower().lstrip("-")
-            if option == "train":
-                print("Adding utterance(s).")
-                luis.add_utterances()   .write().raise_for_status()
-                print("Added utterance(s). Requesting training.")
-                luis.train()            .write().raise_for_status()
-                print("Requested training. Requesting training status.")
-                luis.status()           .write().raise_for_status()
-            elif option == "status":
-                print("Requesting training status.")
-                luis.status().write().raise_for_status()
-        else:
-            print("Adding utterance(s).")
-            luis.add_utterances().write().raise_for_status()
-    except Exception as ex:
-        luis.print()    # JSON response may have more details
-        print("{0.__name__}: {1}".format(type(ex), ex))
-    else:
-        print("Success: results in", RESULTS_FILE)
-        
