@@ -52,7 +52,9 @@ class LUISApp:
     def __new__(cls, *args, **kwargs):
         app_name = args[1]
         if app_name in cls.created_apps_dict:
-            return cls.created_apps_dict[app_name]    
+            return cls.created_apps_dict[app_name]
+
+
         obj = super(LUISApp, cls).__new__(cls)
         return obj
 
@@ -363,14 +365,35 @@ class LUISApp:
             raise Exception('UtteranceNotExists')
         else:
             return self.call(self.EXAMPLES + '/' + str(self.utterance_dict[uterrance]), self.DELETE)
-
-
-if __name__ == "__main__":
     
+    def get_remote_apps(self):
+        headers = {'Content-Type': 'application/json', 'Ocp-Apim-Subscription-Key': self.key}
+        conn = http.client.HTTPSConnection(self.host)
+        conn.request('GET','https://westus.api.cognitive.microsoft.com/luis/api/v2.0/apps/',None, headers)
+        response = conn.getresponse()
+        decoded = response.read().decode(self.UTF8)
+        all_apps = json.loads(decoded)
+
+        existing_apps = []
+
+        for app in all_apps:
+            try:
+                existing_apps.append((app['name'], app['endpoints']['PRODUCTION']['endpointUrl'] + '/versions/0.1/'))
+            except:
+                pass
+
+        print(existing_apps)
+
+        #print(single_app['name'])
+        #print(single_app['endpoints']['PRODUCTION']['endpointUrl'])
+        
+if __name__ == "__main__":
     # example code to manage your luis apps
     luis_manager = {}
-    luis = LUISApp('', 'teste')
+    luis = LUISApp('', 'teste1321')
     print('criou um')
+    luis.get_remote_apps()
+    exit()
     print(luis.add_intent('BookFlight').reason)
     print(luis.intent_dict)
     luis.add_utterances(utterance=['sasasasasasasas','sasasasasasas','sasasasasas','sasasasasassafdasfadsf','sasasdasdasdasd'],intent_name='BookFlight')
